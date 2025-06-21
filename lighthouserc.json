@@ -1,0 +1,22 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "npm run preview",
+      "startServerReadyPattern": "Local:",
+      "url": ["http://localhost:4173", "http://localhost:4173/grains", "http://localhost:4173/boutique", "http://localhost:4173/a-propo", "http://localhost:4173/mon-compte"],
+      "numberOfRuns": 1
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": "./lhci-report"
+    },
+    "assert": {
+      "assertions": {
+        "accessibility": "warn",
+        "performance": "warn",
+        "seo": "warn",
+        "best-practices": "warn"
+      }
+    }
+  }
+}

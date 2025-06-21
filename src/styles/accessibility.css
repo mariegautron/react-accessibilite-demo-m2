@@ -1,0 +1,32 @@
+:focus-visible {
+  outline: 3px solid #4A90E2;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-to-content {
+  position: fixed;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #4A90E2;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 0 0 4px 4px;
+  z-index: 1000;
+  transition: top 0.3s ease-in-out;
+  text-decoration: none;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+.keyboard-mode *:focus {
+  outline: 3px solid #4A90E2 !important;
+  outline-offset: 2px !important;
+}
+
+:not(.keyboard-mode) *:focus {
+  outline: none !important;
+}

@@ -1,0 +1,59 @@
+/* Styles spécifiques pour la page Boutique avec focus amélioré */
+
+/* Style de base pour les cartes de produits */
+.coffee-card {
+  background-color: var(--brown-secondary, #f5f5f5);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s, box-shadow 0.3s, outline 0.2s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Amélioration de la visibilité du focus */
+.coffee-card:focus {
+  outline: 3px solid #0066cc;
+  outline-offset: 3px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  z-index: 1;
+}
+
+.coffee-card:focus-visible {
+  outline: 3px solid #0066cc;
+  outline-offset: 3px;
+}
+
+/* Style pour indiquer qu'un élément est actuellement focalisé */
+.coffee-card[aria-selected="true"] {
+  outline: 3px solid #0066cc;
+  outline-offset: 3px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Amélioration du bouton d'ajout au panier */
+.product-button:focus {
+  outline: 3px solid #0066cc;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.3);
+}
+
+/* Amélioration du contraste pour les prix */
+.product-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #0066cc; /* Couleur plus contrastée */
+  margin: 0.5rem 0;
+}
+
+/* Indication visuelle pour les utilisateurs de clavier */
+.keyboard-navigation-hint {
+  text-align: center;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}

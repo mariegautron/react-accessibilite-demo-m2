@@ -1,0 +1,557 @@
+.page-container {
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.hero {
+  background-image: url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29mZmVlJTIwYmVhbnN8ZW58MHx8MHx8fDA%3D&w=1000&q=80');
+  background-size: cover;
+  background-position: center;
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  color: white;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.cta-button {
+  background-color: var(--coffee-accent);
+  color: var(--dark-brown);
+  border: none;
+  padding: 12px 30px;
+  font-size: 1rem;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.cta-button:hover {
+  background-color: var(--brown-secondary);
+  transform: translateY(-2px);
+}
+
+.coffee-types {
+  display: flex;
+  justify-content: center;
+  background-color: var(--brown-primary);
+  padding: 15px 0;
+  flex-wrap: wrap;
+}
+
+.coffee-type {
+  background: none;
+  border: none;
+  color: white;
+  padding: 0 15px;
+  font-size: 1rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.coffee-type::before {
+  content: '☕';
+  margin-right: 5px;
+}
+
+.coffee-type::after {
+  content: '☕';
+  margin-left: 5px;
+}
+
+.section {
+  padding: 4rem 2rem;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.section-header h3 {
+  font-size: 1.8rem;
+  color: var(--brown-secondary);
+}
+
+.coffee-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.coffee-card {
+  background-color: var(--brown-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s;
+}
+
+.coffee-card:hover {
+  transform: translateY(-10px);
+}
+
+.coffee-card-tag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: var(--coffee-accent);
+  color: var(--dark-brown);
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.coffee-card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.coffee-card-content {
+  padding: 1.5rem;
+  color: white;
+}
+
+.coffee-card-content h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.quote-section {
+  background-color: var(--dark-brown);
+  color: white;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.quote-section h2 {
+  font-size: 2rem;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  line-height: 1.4;
+}
+
+.subscribe {
+  display: flex;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.subscribe input {
+  flex-grow: 1;
+  padding: 12px 20px;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 30px 0 0 30px;
+}
+
+.subscribe button {
+  background-color: var(--coffee-accent);
+  color: var(--dark-brown);
+  border: none;
+  padding: 12px 20px;
+  border-radius: 0 30px 30px 0;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Styles pour l'accessibilité */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Amélioration du contraste et focus visible */
+:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+.coffee-type:focus,
+.cta-button:focus,
+.social-icon:focus,
+.subscribe button:focus {
+  outline: 3px solid #0066cc;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.3);
+}
+
+/* Amélioration du contraste */
+.coffee-type {
+  background-color: #f5f5f5;
+  color: #333333;
+  border: 1px solid #cccccc;
+  font-weight: 600;
+}
+
+.coffee-type[aria-selected="true"] {
+  background-color: #0066cc;
+  color: white;
+  border-color: #0055aa;
+}
+
+.coffee-card-tag {
+  background-color: #cc0000;
+  color: white;
+  font-weight: bold;
+}
+
+.social-icon {
+  background-color: #333333;
+  color: white;
+}
+
+.subscribe button {
+  background-color: #0066cc;
+  color: white;
+}
+
+/* Styles pour les formulaires accessibles */
+input[type="email"] {
+  padding: 10px;
+  border: 2px solid #666666;
+  border-radius: 4px;
+}
+
+input[type="email"]:focus {
+  border-color: #0066cc;
+  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.3);
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem;
+  background-color: #111;
+  color: white;
+  flex-wrap: wrap;
+}
+
+.hours, .location {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.social {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  text-decoration: none;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.social-icon:hover {
+  background-color: var(--coffee-accent);
+}
+
+/* Spacer pour la navbar */
+.navbar-spacer {
+  height: 70px; /* Ajustez cette valeur selon la hauteur de votre navbar */
+}
+
+/* Styles communs pour toutes les pages */
+.page-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 2rem 0;
+  padding-top: 1rem;
+}
+
+.page-content {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header des pages */
+.page-header {
+  text-align: center;
+  padding: 2rem 1rem;
+  background-color: var(--light-brown);
+  color: var(--dark-brown);
+}
+
+/* Styles pour la page À propos */
+.about-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.about-image {
+  flex: 1;
+  min-width: 300px;
+}
+
+.about-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.about-text {
+  flex: 1;
+  min-width: 300px;
+}
+
+.about-text h2 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  color: var(--brown-primary);
+}
+
+.about-text p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.team-section {
+  margin-bottom: 3rem;
+}
+
+.team-section h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: var(--brown-primary);
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.team-member {
+  text-align: center;
+}
+
+.team-member img {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  border: 4px solid var(--brown-secondary);
+}
+
+.team-member h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.vision-section h2 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  color: var(--brown-primary);
+}
+
+.vision-section p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Styles pour la page Compte */
+.account-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.tab-button {
+  padding: 1rem 2rem;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s;
+}
+
+.tab-button.active {
+  border-bottom-color: var(--brown-primary);
+  color: var(--brown-primary);
+  font-weight: bold;
+}
+
+.account-content {
+  max-width: 500px;
+  margin: 0 auto 3rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.form-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.form-button.primary {
+  background-color: var(--brown-primary);
+  color: white;
+}
+
+.forgot-password {
+  color: var(--brown-primary);
+  text-decoration: none;
+}
+
+.account-info {
+  margin-top: 3rem;
+  border-top: 1px solid #ddd;
+  padding-top: 2rem;
+}
+
+.account-info h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: var(--brown-primary);
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.benefit-card {
+  text-align: center;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.benefit-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.benefit-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.benefit-card h3 {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+/* Styles pour la page Boutique */
+.product-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--brown-primary);
+  margin: 0.5rem 0;
+}
+
+.product-button {
+  margin-top: 1rem;
+  padding: 8px 16px;
+  background-color: var(--brown-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.product-button:hover {
+  background-color: var(--brown-secondary);
+}

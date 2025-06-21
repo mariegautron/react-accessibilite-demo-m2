@@ -1,0 +1,121 @@
+.navbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  display: flex;
+  justify-content: space-around;
+  padding: 0.5rem;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #666;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  outline: none;
+}
+
+.nav-item:focus-visible {
+  outline: 3px solid #4A90E2;
+  outline-offset: 2px;
+  background-color: rgba(74, 144, 226, 0.1);
+}
+
+.nav-item.active {
+  color: #6B4226;
+}
+
+.nav-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.nav-text {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.nav-text.active {
+  color: #6B4226;
+}
+
+/* Ajout d'un indicateur visuel pour l'élément actif */
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background-color: #6B4226;
+  border-radius: 50%;
+}
+
+/* Support pour la navigation au clavier */
+.nav-item:focus {
+  outline: none;
+}
+
+.keyboard-mode .nav-item:focus {
+  box-shadow: 0 0 0 3px rgba(107, 66, 38, 0.6);
+  background-color: rgba(107, 66, 38, 0.1);
+}
+
+/* Animation au survol */
+.nav-item:hover {
+  color: #6B4226;
+  transform: translateY(-2px);
+}
+
+/* Animation de transition entre les pages */
+.nav-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #6B4226;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: right;
+}
+
+.nav-item:hover::before,
+.nav-item:focus::before,
+.nav-item.active::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Support pour les préférences de mouvement réduit */
+@media (prefers-reduced-motion: reduce) {
+  .nav-item {
+    transition: none;
+  }
+  
+  .nav-item:hover {
+    transform: none;
+  }
+  
+  .nav-item::before {
+    transition: none;
+  }
+}

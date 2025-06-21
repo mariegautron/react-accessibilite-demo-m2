@@ -1,0 +1,55 @@
+.decorative-bar {
+  width: 100%;
+  background-color: #8B4513;
+  padding: 8px 0;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.coffee-icons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 200%;
+  animation: scrollIcons 30s linear infinite;
+  white-space: nowrap;
+}
+
+.coffee-item {
+  display: flex;
+  align-items: center;
+  margin: 0 20px;
+  color: #FFF8DC;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.coffee-icon {
+  font-size: 24px;
+  margin-right: 8px;
+}
+
+.coffee-name {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+@keyframes scrollIcons {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Effet de survol */
+.coffee-item:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}

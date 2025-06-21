@@ -1,41 +1,36 @@
-// @ts-check
-
 import js from "@eslint/js";
 import * as importPlugin from "eslint-plugin-import";
 import reactPlugin from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
-import tseslint from "typescript-eslint";
+import tseslintPlugin from "@typescript-eslint/eslint-plugin";
+import tseslintParser from "@typescript-eslint/parser";
 
-export default tseslint.config(
-  { ignores: ["dist"] },
+export default [
+  js.configs.recommended,
   {
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-      ...tseslint.configs.stylistic,
-    ],
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: {
-        ...globals.browser,
-        React: "readonly",
-      },
-      parser: tseslint.parser,
+      parser: tseslintParser,
       parserOptions: {
         project: "./tsconfig.json",
+        ecmaVersion: 2020,
+        sourceType: "module",
         ecmaFeatures: {
           jsx: true,
         },
       },
+      globals: {
+        ...globals.browser,
+        React: "readonly",
+      },
     },
     plugins: {
+      "@typescript-eslint": tseslintPlugin,
       react: reactPlugin,
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
-      "@typescript-eslint": tseslint.plugin,
       import: importPlugin,
     },
     settings: {
@@ -52,33 +47,31 @@ export default tseslint.config(
       },
     },
     rules: {
+      // React Hooks
       ...reactHooks.configs.recommended.rules,
       ...reactPlugin.configs.recommended.rules,
 
-      // Import rules - keep essential, downgrade noisy ones to warnings
+      // Import rules
       "import/no-unresolved": "error",
-      "import/named": "warn", // Downgraded to warning
-      "import/default": "warn", // Downgraded to warning
+      "import/named": "warn",
+      "import/default": "warn",
       "import/export": "error",
-      "import/no-duplicates": "warn", // Added: warn on duplicate imports
+      "import/no-duplicates": "warn",
 
       // React Refresh
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true }, // Fixed: changed from allowConstantExports to allowConstantExport
-      ],
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
 
       // TypeScript
       "@typescript-eslint/no-unused-vars": "off",
 
-      // Tailwind-friendly rules
+      // JSX spécifiques à Tailwind ou shaders
       "react/no-unknown-property": [
         "error",
         {
           ignore: [
-            "class", // For Tailwind class merging libraries
-            "css", // For CSS-in-JS solutions
-            "tw", // For twin.macro or similar
+            "class",
+            "css",
+            "tw",
             "args",
             "position",
             "intensity",
@@ -87,35 +80,27 @@ export default tseslint.config(
             "fragmentShader",
             "uniforms",
             "side",
-            "cmdk-input-wrapper", // Add shadcn command component property
+            "cmdk-input-wrapper",
           ],
         },
       ],
 
-      // Turn off rules that are too strict
-      "@typescript-eslint/naming-convention": "off",
-      "@typescript-eslint/no-explicit-any": "warn", // Warning instead of off
+      // Moins de bruit sur les règles TS strictes
+      "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-unsafe-assignment": "off",
       "@typescript-eslint/no-unsafe-call": "off",
       "@typescript-eslint/no-unsafe-member-access": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-unsafe-argument": "off",
-      "@typescript-eslint/restrict-template-expressions": "off",
-      "@typescript-eslint/no-redundant-type-constituents": "off",
       "@typescript-eslint/no-floating-promises": "off",
-      "@typescript-eslint/unbound-method": "off",
-      "@typescript-eslint/require-await": "warn", // Warning instead of off
+      "@typescript-eslint/require-await": "warn",
 
-      // React specific
+      // React JSX divers
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
-      "react/jsx-no-target-blank": "warn", // Added: security warning for _blank
-      "react/jsx-key": ["warn", { checkFragmentShorthand: true }], // Added: better key warnings
+      "react/jsx-no-target-blank": "warn",
+      "react/jsx-key": ["warn", { checkFragmentShorthand: true }],
       "react/no-unescaped-entities": "off",
-
-      // React Hooks
-      "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn",
     },
   },
-);
+];

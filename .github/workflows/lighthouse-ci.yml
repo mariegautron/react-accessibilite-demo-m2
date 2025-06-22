@@ -93,7 +93,7 @@ jobs:
               .join('\n');
 
             const body = [
-              '<!-- lhci-report -->',                     // <-- marque unique
+              '<!-- lhci-report -->',
               '## 📊 Lighthouse report',
               '',
               `*Workflow run: [link](${runUrl})*`,

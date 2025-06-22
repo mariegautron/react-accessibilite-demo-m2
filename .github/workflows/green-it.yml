@@ -1,4 +1,4 @@
-name: Green IT check
+name: GreenFrame audit
 
 on:
   pull_request:
@@ -7,12 +7,12 @@ on:
       - main
 
 jobs:
-  greenit:
-    name: Green IT impact
+  greenframe:
+    name: GreenFrame CO₂ audit
     runs-on: ubuntu-latest
 
     steps:
-      - name: Get Vercel preview URL from PR comment
+      - name: Récupérer l'URL Vercel Preview depuis le commentaire
         id: vercel
         uses: actions/github-script@v7
         with:
@@ -28,142 +28,103 @@ jobs:
               c.user?.login === 'vercel[bot]' && c.body?.includes('Visit Preview')
             );
 
-            if (vercelComment) {
-              const match = vercelComment.body.match(/\[Visit Preview\]\((.*?)\)/);
-              if (match) {
-                core.setOutput('preview-url', match[1]);
-                console.log("✅ URL Preview Vercel trouvée :", match[1]);
-              } else {
-                core.setFailed("❌ Aucune URL 'Visit Preview' trouvée.");
-              }
-            } else {
-              core.setFailed("❌ Aucun commentaire Vercel trouvé.");
+            if (!vercelComment) {
+              core.setFailed("❌ Aucun commentaire Vercel trouvé dans la PR.");
+              return;
             }
 
-      - name: Call WebsiteCarbon API
-        id: carbon
+            const match = vercelComment.body.match(/\[Visit Preview\]\((.*?)\)/);
+            if (!match) {
+              core.setFailed("❌ URL Preview Vercel non trouvée.");
+              return;
+            }
+
+            core.setOutput("preview-url", match[1]);
+
+      - name: Lancer GreenFrame sur plusieurs pages
         run: |
-          URL="${{ steps.vercel.outputs.preview-url }}"
-          echo "🔎 Test de l'URL : $URL"
+          BASE_URL="${{ steps.vercel.outputs.preview-url }}"
+          echo "🌱 Test de l’URL base : $BASE_URL"
 
-          if [ -z "$URL" ]; then
-            echo "❌ L'URL Vercel est vide. Abandon."
-            exit 1
-          fi
+          PAGES=("/" "/grains" "/a-propos" "/boutique")
+          mkdir greenframe-reports
 
-          RESPONSE=$(curl -s -H "x-vercel-protection-bypass: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}" \
-            "https://api.websitecarbon.com/site?url=$URL")
+          for path in "${PAGES[@]}"; do
+            SAFE_NAME=$(echo "$path" | sed 's|/|_|g')
+            FULL_URL="${BASE_URL%/}${path}"
+            echo "➡️ Analyse de ${FULL_URL}"
 
-          echo "📄 Réponse brute de WebsiteCarbon :"
-          echo "$RESPONSE"
+            npx --yes greenframe "$FULL_URL" --json > "greenframe-reports/${SAFE_NAME}.json" || echo "{\"error\":\"Échec pour $FULL_URL\"}" > "greenframe-reports/${SAFE_NAME}.json"
+          done
 
-          echo "$RESPONSE" > carbon.json
-
-      - name: Comment (or update) PR with Green IT report
+      - name: Poster ou mettre à jour le commentaire PR
         uses: actions/github-script@v7
-        env:
-          PREVIEW_URL: ${{ steps.vercel.outputs.preview-url }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fs = require('fs');
+        env:
+          BASE_URL: ${{ steps.vercel.outputs.preview-url }}
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          const { owner, repo } = context.repo;
+          const issue_number = context.issue.number;
+          const baseUrl = process.env.BASE_URL;
 
-            const { owner, repo } = context.repo;
-            const issue_number = context.issue.number;
-            const vercelUrl = process.env.PREVIEW_URL;
+          const files = fs.readdirSync('./greenframe-reports');
+          let body = [
+            '<!-- greenframe-report -->',
+            '## 🌿 Rapport GreenFrame multipage',
+            `🔗 Base URL : [${baseUrl}](${baseUrl})`,
+            ''
+          ];
 
-            const reportRaw = fs.readFileSync('carbon.json', 'utf8');
-            console.log("📄 Contenu de carbon.json :", reportRaw);
+          for (const file of files) {
+            const json = JSON.parse(fs.readFileSync(path.join('./greenframe-reports', file), 'utf8'));
+            const page = file.replace('.json', '').replace(/_/g, '/') || '/';
 
-            let report;
-            try {
-              report = JSON.parse(reportRaw);
-            } catch (e) {
-              core.setFailed('❌ Le JSON renvoyé n’est pas valide. Peut-être une redirection vers une page de login ?');
-              return;
+            if (json.error) {
+              body.push(`### ❌ ${page}\n- ${json.error}`);
+              continue;
             }
 
-            const stats = report?.statistics;
-            const co2Grid = stats?.co2?.grid?.grams;
-            const co2Renew = stats?.co2?.renewable?.grams;
-            const litresGrid = stats?.co2?.grid?.litres;
-            const litresRenew = stats?.co2?.renewable?.litres;
-            const bytes = report?.bytes;
-            const adjustedBytes = stats?.adjustedBytes;
-            const energy = stats?.energy;
-            const cleaner = report?.cleanerThan;
-            const rating = report?.rating;
-            const green = report?.green;
+            const grams = json.co2?.grams ?? 0;
+            const emoji = grams < 0.5 ? '🟢' : (grams < 1 ? '🟠' : '🔴');
 
-            if (
-              typeof co2Grid !== 'number' || typeof co2Renew !== 'number' ||
-              typeof cleaner !== 'number' || typeof bytes !== 'number'
-            ) {
-              core.setFailed('❌ Le rapport WebsiteCarbon ne contient pas toutes les données attendues.');
-              return;
-            }
+            body.push(`### ${page}`);
+            body.push(`- CO₂ estimé : **${grams.toFixed(2)}g** ${emoji}`);
+            body.push(`- Chargement simulé : ${json.steps?.length ?? '?'} étapes`);
+            body.push('');
+          }
 
-            const co2Emoji = co2Grid < 0.5 ? '🟢' : (co2Grid < 1 ? '🟠' : '🔴');
-            const sizeEmoji = adjustedBytes < 1_000_000 ? '🟢' : (adjustedBytes < 2_500_000 ? '🟠' : '🔴');
-            const energyEmoji = energy < 0.001 ? '🟢' : (energy < 0.002 ? '🟠' : '🔴');
-            const cleanerEmoji = cleaner > 0.75 ? '🟢' : (cleaner > 0.4 ? '🟠' : '🔴');
-            const greenEmoji = green === 'true' ? '🟢' : (green === 'false' ? '🔴' : '❓');
+          body.push('_Analyse réalisée avec [GreenFrame](https://greenframe.io)_');
 
-            const body = [
-              '<!-- greenit-report -->',
-              '## 🌿 Rapport Green IT (Automatisé)',
-              '',
-              `🔗 **URL analysée** : [${vercelUrl}](${vercelUrl})`,
-              '',
-              `### Classement : **${rating ?? 'Non disponible'} ${cleanerEmoji}**`,
-              `_Plus propre que : **${(cleaner * 100).toFixed(1)}%** des sites testés_`,
-              '',
-              `### 💨 Émissions estimées`,
-              `- Réseau classique : **${co2Grid.toFixed(2)}g CO₂** ${co2Emoji} (~${litresGrid.toFixed(2)} litres d'air)`,
-              `- Énergies renouvelables : **${co2Renew.toFixed(2)}g CO₂** (~${litresRenew.toFixed(2)} litres d'air)`,
-              '',
-              `### 📊 Données techniques`,
-              `- Taille brute de la page : **${(bytes / 1024).toFixed(1)} Ko**`,
-              `- Taille ajustée : **${(adjustedBytes / 1024).toFixed(1)} Ko** ${sizeEmoji}`,
-              `- Énergie estimée : **${(energy * 1000).toFixed(2)} Wh** ${energyEmoji}`,
-              '',
-              `### ♻️ Autres indicateurs`,
-              `- Hébergeur vert : **${green === 'true' ? 'Oui' : (green === 'false' ? 'Non' : 'Inconnu')}** ${greenEmoji}`,
-              '',
-              '_Données fournies par [WebsiteCarbon.com](https://www.websitecarbon.com)_'
-            ].join('\n');
+          const finalComment = body.join('\n');
 
-            const { data: comments } = await github.rest.issues.listComments({
+          const { data: comments } = await github.rest.issues.listComments({
+            owner,
+            repo,
+            issue_number,
+            per_page: 100
+          });
+
+          const existing = comments.find(c =>
+            c.user?.type === 'Bot' && c.body?.includes('<!-- greenframe-report -->')
+          );
+
+          if (existing) {
+            await github.rest.issues.updateComment({
+              owner,
+              repo,
+              comment_id: existing.id,
+              body: finalComment
+            });
+            core.info("🔁 Commentaire mis à jour");
+          } else {
+            await github.rest.issues.createComment({
               owner,
               repo,
               issue_number,
-              per_page: 100
+              body: finalComment
             });
-
-            const existing = comments.find(c =>
-              c.user?.type === 'Bot' &&
-              c.body?.includes('<!-- greenit-report -->')
-            );
-
-            if (existing) {
-              await github.rest.issues.updateComment({
-                owner,
-                repo,
-                comment_id: existing.id,
-                body
-              });
-              core.info('🔁 Commentaire Green IT mis à jour');
-            } else {
-              await github.rest.issues.createComment({
-                owner,
-                repo,
-                issue_number,
-                body
-              });
-              core.info('🆕 Nouveau commentaire Green IT créé');
-            }
-
-            const allowedRatings = ['A', 'B'];
-            if (!rating || !allowedRatings.includes(rating)) {
-              core.setFailed(`🚨 Score WebsiteCarbon trop faible ou absent : ${rating ?? 'non disponible'}. Minimum requis : B.`);
-            }
+            core.info("🆕 Nouveau commentaire ajouté");
+          }

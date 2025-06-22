@@ -1,15 +1,15 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
-import Navbar from './components/Navbar';
-import DecorativeBar from './components/DecorativeBar';
-import Home from './pages/Home';
-import Grains from './pages/Grains';
-import Boutique from './pages/Boutique';
-import APropos from './pages/APropos';
-import MonCompte from './pages/MonCompte';
-import './App.css';
-import './styles/accessibility.css';
-import { useState, useEffect } from 'react';
+import { Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+import Navbar from "./components/Navbar";
+import DecorativeBar from "./components/DecorativeBar";
+import Home from "./pages/Home";
+import Grains from "./pages/Grains";
+import Boutique from "./pages/Boutique";
+import APropos from "./pages/APropos";
+import MonCompte from "./pages/MonCompte";
+import "./App.css";
+import "./styles/accessibility.css";
+import { useState, useEffect } from "react";
 
 function App() {
   const location = useLocation();
@@ -17,23 +17,23 @@ function App() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Tab') {
-        document.body.classList.add('keyboard-mode');
+      if (e.key === "Tab") {
+        document.body.classList.add("keyboard-mode");
         setIsKeyboardUser(true);
       }
     };
 
     const handleMouseDown = () => {
-      document.body.classList.remove('keyboard-mode');
+      document.body.classList.remove("keyboard-mode");
       setIsKeyboardUser(false);
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("mousedown", handleMouseDown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("mousedown", handleMouseDown);
     };
   }, []);
 
@@ -41,7 +41,7 @@ function App() {
     <div className="app">
       <DecorativeBar />
       <a href="#main-content" className="skip-to-content" tabIndex={0}>
-        Aller au contenu principal
+        Aller au contenu principal a
       </a>
       <Navbar />
       <main id="main-content" tabIndex={-1}>

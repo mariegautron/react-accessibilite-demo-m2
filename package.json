@@ -9,7 +9,10 @@
     "lint": "eslint src --fix && tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "preview": "vite preview",
-    "lighthouse:ci": "lhci autorun"
+    "lighthouse:ci": "lhci autorun",
+    "test:a11y": "playwright test --grep @a11y",
+    "report:a11y": "node scripts/generate-a11y-report.ts",
+    "a11y": "npm run test:a11y && npm run report:a11y"
   },
   "dependencies": {
     "@chakra-ui/react": "^2.8.2",
@@ -28,11 +31,14 @@
   "devDependencies": {
     "@eslint/js": "^9.18.0",
     "@lhci/cli": "^0.15.0",
+    "@playwright/test": "^1.53.1",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
-    "@typescript-eslint/eslint-plugin": "^8.20.0",
-    "@typescript-eslint/parser": "^8.20.0",
+    "@typescript-eslint/eslint-plugin": "^8.34.1",
+    "@typescript-eslint/parser": "^8.34.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "axe-html-reporter": "^2.2.11",
+    "axe-playwright": "^2.1.0",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-import-resolver-typescript": "^3.7.0",
@@ -42,10 +48,10 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.18",
     "globals": "^15.14.0",
+    "playwright": "^1.53.1",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.10",
     "typescript": "~5.6.2",
-    "typescript-eslint": "^8.20.0",
     "vite": "^6.0.5"
   }
 }

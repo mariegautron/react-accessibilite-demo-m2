@@ -26,3 +26,5 @@ dist-ssr
 
 .lighthouseci
 lhci-report/
+results
+test-results

@@ -5,10 +5,6 @@ import { useEffect } from "react";
 const MotionBox = motion(Box);
 
 const Grains = () => {
-  useEffect(() => {
-    document.title = "Nos grains";
-  }, []);
-
   const grainsInfo = [
     {
       nom: "Arabica",

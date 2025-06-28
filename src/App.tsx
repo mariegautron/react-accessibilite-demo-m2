@@ -10,6 +10,7 @@ import MonCompte from "./pages/MonCompte";
 import "./App.css";
 import "./styles/accessibility.css";
 import { useState, useEffect } from "react";
+import RouteAnnouncer from "./components/RouteAnnoncer";
 
 function App() {
   const location = useLocation();
@@ -39,8 +40,9 @@ function App() {
 
   return (
     <div className="app">
+      <RouteAnnouncer />
       <DecorativeBar />
-      <a href="#main-content" className="skip-to-content" tabIndex={0}>
+      <a id="skip-link" href="#main-content" className="skip-to-content">
         Aller au contenu principal a
       </a>
       <Navbar />

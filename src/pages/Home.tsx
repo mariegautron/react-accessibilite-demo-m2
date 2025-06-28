@@ -2,24 +2,8 @@ import { useEffect } from "react";
 import "./PageStyles.css";
 
 const Home = () => {
-  useEffect(() => {
-    document.title = "Accueil – Grains de Café d'Exception";
-  }, []);
-
-  useEffect(() => {
-    const title = document.getElementById("virtual-title");
-    if (title) {
-      title.textContent = document.title;
-      title.focus();
-    }
-  }, []);
-
   return (
     <div className="page-container">
-      <p id="virtual-title" tabIndex={-1} aria-live="polite" className="visually-hidden">
-        Accueil – Grains de Café d'Exception
-      </p>
-
       <header className="hero">
         <div className="hero-content">
           <h1>Découvrez l'Excellence des Grains de Café</h1>

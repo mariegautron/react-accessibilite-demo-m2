@@ -1,40 +1,41 @@
-import { Box, Heading, SimpleGrid, Text } from '@chakra-ui/react';
-import { motion } from 'framer-motion';
+import { Box, Heading, SimpleGrid, Text } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 const MotionBox = motion(Box);
 
 const Grains = () => {
   const grainsInfo = [
     {
-      nom: 'Arabica',
-      description: 'Un grain doux et aromatique avec des notes fruitées et florales.',
-      origine: 'Éthiopie',
-      altitude: '900-2000m'
+      nom: "Arabica",
+      description: "Un grain doux et aromatique avec des notes fruitées et florales.",
+      origine: "Éthiopie",
+      altitude: "900-2000m",
     },
     {
-      nom: 'Robusta',
-      description: 'Un grain corsé avec des notes terreuses et boisées.',
-      origine: 'Vietnam',
-      altitude: '0-800m'
+      nom: "Robusta",
+      description: "Un grain corsé avec des notes terreuses et boisées.",
+      origine: "Vietnam",
+      altitude: "0-800m",
     },
     {
-      nom: 'Bourbon',
-      description: 'Un grain raffiné aux arômes caramélisés et chocolatés.',
-      origine: 'Île de la Réunion',
-      altitude: '1000-2000m'
+      nom: "Bourbon",
+      description: "Un grain raffiné aux arômes caramélisés et chocolatés.",
+      origine: "Île de la Réunion",
+      altitude: "1000-2000m",
     },
     {
-      nom: 'Moka',
-      description: 'Un grain complexe aux notes épicées et chocolatées.',
-      origine: 'Yémen',
-      altitude: '1500-2200m'
+      nom: "Moka",
+      description: "Un grain complexe aux notes épicées et chocolatées.",
+      origine: "Yémen",
+      altitude: "1500-2200m",
     },
     {
-      nom: 'Typica',
-      description: 'Le grain originel avec des saveurs douces et équilibrées.',
-      origine: 'Amérique Centrale',
-      altitude: '1200-2000m'
-    }
+      nom: "Typica",
+      description: "Le grain originel avec des saveurs douces et équilibrées.",
+      origine: "Amérique Centrale",
+      altitude: "1200-2000m",
+    },
   ];
 
   const container = {
@@ -42,14 +43,14 @@ const Grains = () => {
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2
-      }
-    }
+        staggerChildren: 0.2,
+      },
+    },
   };
 
   const item = {
     hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 }
+    show: { opacity: 1, y: 0 },
   };
 
   return (
@@ -74,7 +75,7 @@ const Grains = () => {
             boxShadow="lg"
             bg="white"
             transition="transform 0.2s"
-            _hover={{ transform: 'translateY(-4px)' }}
+            _hover={{ transform: "translateY(-4px)" }}
             role="article"
             aria-label={`Grain de café ${grain.nom}`}
           >
@@ -82,8 +83,12 @@ const Grains = () => {
               {grain.nom}
             </Heading>
             <Text mb={4}>{grain.description}</Text>
-            <Text fontWeight="bold" color="brown.400">Origine: {grain.origine}</Text>
-            <Text fontWeight="bold" color="brown.400">Altitude: {grain.altitude}</Text>
+            <Text fontWeight="bold" color="brown.400">
+              Origine: {grain.origine}
+            </Text>
+            <Text fontWeight="bold" color="brown.400">
+              Altitude: {grain.altitude}
+            </Text>
           </MotionBox>
         ))}
       </SimpleGrid>

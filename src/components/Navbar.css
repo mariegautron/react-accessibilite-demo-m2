@@ -21,17 +21,16 @@
   border-radius: 8px;
   transition: all 0.3s ease;
   position: relative;
-  outline: none;
 }
 
 .nav-item:focus-visible {
-  outline: 3px solid #4A90E2;
+  outline: 3px solid #4a90e2;
   outline-offset: 2px;
   background-color: rgba(74, 144, 226, 0.1);
 }
 
 .nav-item.active {
-  color: #6B4226;
+  color: #6b4226;
 }
 
 .nav-icon {
@@ -47,25 +46,20 @@
 }
 
 .nav-text.active {
-  color: #6B4226;
+  color: #6b4226;
 }
 
 /* Ajout d'un indicateur visuel pour l'élément actif */
 .nav-item.active::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -0.5rem;
   left: 50%;
   transform: translateX(-50%);
   width: 4px;
   height: 4px;
-  background-color: #6B4226;
+  background-color: #6b4226;
   border-radius: 50%;
-}
-
-/* Support pour la navigation au clavier */
-.nav-item:focus {
-  outline: none;
 }
 
 .keyboard-mode .nav-item:focus {
@@ -75,7 +69,7 @@
 
 /* Animation au survol */
 .nav-item:hover {
-  color: #6B4226;
+  color: #6b4226;
   transform: translateY(-2px);
 }
 
@@ -86,13 +80,13 @@
 }
 
 .nav-item::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 2px;
-  background: #6B4226;
+  background: #6b4226;
   transform: scaleX(0);
   transition: transform 0.3s ease;
   transform-origin: right;
@@ -110,11 +104,11 @@
   .nav-item {
     transition: none;
   }
-  
+
   .nav-item:hover {
     transform: none;
   }
-  
+
   .nav-item::before {
     transition: none;
   }

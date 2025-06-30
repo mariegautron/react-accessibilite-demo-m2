@@ -1,12 +1,14 @@
 import { useState } from "react";
 import "./PageStyles.css";
 import { Modal } from "../components/Modal";
+import { ChakraModal } from "../components/ChakraModal";
 
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
   return (
     <div className="page-container">
       <header className="hero">
@@ -23,6 +25,7 @@ const Home = () => {
           >
             Découvrir
           </button>
+          <ChakraModal />
         </div>
       </header>
 

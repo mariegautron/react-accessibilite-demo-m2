@@ -39,7 +39,6 @@ function App() {
 
   return (
     <div className="app">
-      <DecorativeBar />
       <a href="#main-content" className="skip-to-content" tabIndex={0}>
         Aller au contenu principal a
       </a>

@@ -3,150 +3,192 @@ import {
   Heading,
   Input,
   Text,
-  VisuallyHidden,
+  FormLabel,
   UnorderedList,
   ListItem,
-  Link as ChakraLink,
+  InputGroup,
+  Card,
+  CardBody,
 } from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import { useState, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
+import { SearchIcon } from "@chakra-ui/icons";
+import { grains } from "../mocks/grains";
 
-const MotionBox = motion(Box);
+const uniqueCategories = [...new Set(grains.map((g) => g.origine))];
 
-const Grains = () => {
+export default function Grains() {
   const [query, setQuery] = useState("");
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [ariaMessage, setAriaMessage] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const resultsRef = useRef<HTMLHeadingElement>(null);
 
-  const grainsInfo = [
-    {
-      nom: "Arabica",
-      description: "Un grain doux et aromatique avec des notes fruitées et florales.",
-      origine: "Éthiopie",
-      altitude: "900-2000m",
-    },
-    {
-      nom: "Robusta",
-      description: "Un grain corsé avec des notes terreuses et boisées.",
-      origine: "Vietnam",
-      altitude: "0-800m",
-    },
-    {
-      nom: "Bourbon",
-      description: "Un grain raffiné aux arômes caramélisés et chocolatés.",
-      origine: "Île de la Réunion",
-      altitude: "1000-2000m",
-    },
-    {
-      nom: "Moka",
-      description: "Un grain complexe aux notes épicées et chocolatées.",
-      origine: "Yémen",
-      altitude: "1500-2200m",
-    },
-    {
-      nom: "Typica",
-      description: "Le grain originel avec des saveurs douces et équilibrées.",
-      origine: "Amérique Centrale",
-      altitude: "1200-2000m",
-    },
-  ];
-
-  const filteredGrains = useMemo(() => {
-    const lowerQuery = query.toLowerCase();
-    return grainsInfo.filter(
-      (grain) =>
-        grain.nom.toLowerCase().includes(lowerQuery) ||
-        grain.description.toLowerCase().includes(lowerQuery) ||
-        grain.origine.toLowerCase().includes(lowerQuery),
-    );
+  useEffect(() => {
+    if (query.length >= 3) {
+      const matches = uniqueCategories.filter((cat) =>
+        cat.toLowerCase().includes(query.toLowerCase()),
+      );
+      setSuggestions(matches);
+      setAriaMessage(
+        `${matches.length} suggestion${matches.length !== 1 ? "s" : ""} trouvé${matches.length !== 1 ? "s" : ""}.`,
+      );
+    } else {
+      setSuggestions([]);
+      setAriaMessage("Veuillez saisir au moins 3 caractères.");
+    }
+    setActiveIndex(-1);
   }, [query]);
 
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-      },
-    },
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (suggestions.length === 0) return;
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIndex((prev) => (prev + 1) % suggestions.length);
+    }
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIndex((prev) => (prev - 1 + suggestions.length) % suggestions.length);
+    }
+    if (e.key === "Enter" && activeIndex >= 0) {
+      e.preventDefault();
+      handleSelect(suggestions[activeIndex]);
+    }
+    if (e.key === "Escape") {
+      setSuggestions([]);
+      setActiveIndex(-1);
+    }
   };
 
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
+  const handleSelect = (category: string) => {
+    setQuery(category);
+    setSelectedCategory(category);
+    setSuggestions([]);
+    setActiveIndex(-1);
+    setTimeout(() => {
+      resultsRef.current?.focus();
+    }, 0);
   };
+
+  const filteredGrains =
+    selectedCategory != null ? grains.filter((g) => g.origine === selectedCategory) : [];
 
   return (
-    <Box p={8} maxW="1200px" mx="auto">
-      <Heading as="h1" mb={8} textAlign="center" color="brown.600">
-        Nos Grains de Café
+    <Box maxW="700px" mx="auto" p={8}>
+      <Heading as="h1" size="lg" mb={6}>
+        Rechercher par origine de café
       </Heading>
 
-      <Box mb={6}>
-        <VisuallyHidden as="label" htmlFor="search-grain">
-          Rechercher un grain de café
-        </VisuallyHidden>
-        <Input
-          id="search-grain"
-          type="search"
-          placeholder="Rechercher un grain de café..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          aria-describedby="search-instructions"
-          autoComplete="off"
-        />
-        <Text id="search-instructions" fontSize="sm" mt={2}>
-          Les résultats sont filtrés automatiquement à chaque frappe.
-        </Text>
+      <Box role="combobox" aria-controls="search-results" aria-expanded={suggestions.length > 0}>
+        <FormLabel htmlFor="search" fontWeight="bold" display="flex" alignItems="center" gap={2}>
+          <SearchIcon aria-hidden="true" />
+          Rechercher une origine de café
+        </FormLabel>
+
+        <InputGroup role="search">
+          <Input
+            ref={inputRef}
+            id="search"
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Ex. Brésil, Éthiopie, Colombie…"
+            aria-controls="search-results"
+            aria-activedescendant={activeIndex >= 0 ? `result-${activeIndex}` : undefined}
+            aria-describedby="search-helper search-feedback"
+            onKeyDown={handleKeyDown}
+            autoComplete="off"
+          />
+        </InputGroup>
       </Box>
 
-      <Text id="results-feedback" aria-live="polite" mb={4} fontWeight="medium">
-        {filteredGrains.length === 0
-          ? "Aucun résultat"
-          : `${filteredGrains.length} grain${filteredGrains.length > 1 ? "s" : ""} affiché${filteredGrains.length > 1 ? "s" : ""}`}
+      <Text id="search-helper" fontSize="sm" mt={2}>
+        La recherche démarre à partir de 3 lettres. Sélectionnez une origine.
       </Text>
 
-      <Box role="region" aria-label="Résultats de la recherche">
+      <Box
+        id="search-feedback"
+        fontSize="sm"
+        mt={1}
+        color="gray.700"
+        aria-live="polite"
+        role="status"
+      >
+        {ariaMessage}
+      </Box>
+
+      {suggestions.length > 0 && (
         <UnorderedList
-          as={motion.ul}
-          variants={container}
-          initial="hidden"
-          animate="show"
-          spacing={8}
-          listStyleType="none"
-          m={0}
+          id="search-results"
+          role="listbox"
+          mt={4}
           p={0}
-          mb={"150px"}
+          listStyleType="none"
+          border="1px solid #ccc"
+          borderRadius="md"
+          maxH="300px"
+          overflowY="auto"
         >
-          {filteredGrains.map((grain) => (
-            <ListItem key={grain.nom}>
-              <MotionBox
-                variants={item}
-                p={6}
-                borderRadius="lg"
-                boxShadow="lg"
-                bg="white"
-                transition="transform 0.2s"
-                _hover={{ transform: "translateY(-4px)" }}
-              >
-                <Heading as="h3" size="md" mb={4} color="brown.500">
-                  {grain.nom}
-                </Heading>
-                <Text mb={4}>{grain.description}</Text>
-                <Text fontWeight="bold" color="brown.400">
-                  Origine : {grain.origine}
-                </Text>
-                <Text fontWeight="bold" color="brown.400">
-                  Altitude : {grain.altitude}
-                </Text>
-                <ChakraLink href="#" mt={4} display="inline-block" color="blue.600">
-                  En savoir plus sur {grain.nom}
-                </ChakraLink>
-              </MotionBox>
+          {suggestions.map((cat, index) => (
+            <ListItem
+              key={cat}
+              id={`result-${index}`}
+              role="option"
+              aria-selected={activeIndex === index}
+              px={4}
+              py={3}
+              bg={activeIndex === index ? "gray.100" : "white"}
+              cursor="pointer"
+              onMouseDown={() => handleSelect(cat)}
+            >
+              <Text fontWeight="bold">{cat}</Text>
             </ListItem>
           ))}
         </UnorderedList>
-      </Box>
+      )}
+
+      {filteredGrains.length > 0 && (
+        <>
+          <Box
+            id="results-feedback"
+            fontSize="sm"
+            mt={6}
+            color="gray.700"
+            aria-live="polite"
+            role="status"
+            ref={resultsRef}
+            tabIndex={-1}
+          >
+            {`${filteredGrains.length} résultat${filteredGrains.length !== 1 ? "s" : ""} trouvé${filteredGrains.length !== 1 ? "s" : ""} pour l’origine ${selectedCategory}.`}
+          </Box>
+
+          <Box mt={4} role="region" aria-labelledby="results-heading">
+            <Heading as="h2" size="md" mb={4} id="results-heading">
+              Grains en provenance de {selectedCategory}
+            </Heading>
+
+            <UnorderedList spacing={4} listStyleType="none" m={0} p={0}>
+              {filteredGrains.map((grain) => (
+                <ListItem key={grain.nom} role="listitem">
+                  <Card border="1px solid" borderColor="gray.300">
+                    <CardBody>
+                      <Heading as="h3" size="sm" mb={2}>
+                        {grain.nom}
+                      </Heading>
+                      <Text fontSize="sm" color="gray.600" mb={1}>
+                        Origine : {grain.origine}
+                      </Text>
+                      <Text fontSize="sm">{grain.description}</Text>
+                    </CardBody>
+                  </Card>
+                </ListItem>
+              ))}
+            </UnorderedList>
+          </Box>
+        </>
+      )}
     </Box>
   );
-};
-
-export default Grains;
+}

@@ -5,7 +5,7 @@
 }
 
 .hero {
-  background-image: url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29mZmVlJTIwYmVhbnN8ZW58MHx8MHx8fDA%3D&w=1000&q=80');
+  background-image: url("https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29mZmVlJTIwYmVhbnN8ZW58MHx8MHx8fDA%3D&w=1000&q=80");
   background-size: cover;
   background-position: center;
   height: 80vh;
@@ -16,7 +16,7 @@
 }
 
 .hero::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -82,12 +82,12 @@
 }
 
 .coffee-type::before {
-  content: '☕';
+  content: "☕";
   margin-right: 5px;
 }
 
 .coffee-type::after {
-  content: '☕';
+  content: "☕";
   margin-left: 5px;
 }
 
@@ -276,7 +276,8 @@ input[type="email"]:focus {
   flex-wrap: wrap;
 }
 
-.hours, .location {
+.hours,
+.location {
   display: flex;
   align-items: center;
 }
@@ -515,7 +516,9 @@ input[type="email"]:focus {
   padding: 2rem;
   background-color: #f9f9f9;
   border-radius: 8px;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
 }
 
 .benefit-card:hover {
